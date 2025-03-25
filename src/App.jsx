@@ -130,19 +130,19 @@ function App() {
 
   // useEffect to save Todos to localStorage whenever they change
   useEffect(() => {
-    if (Todos.length > 0) {
+    if (typeof window !== "undefined" && Todos.length > 0) {  // ✅ Prevent SSR issue
       localStorage.setItem("todos", JSON.stringify(Todos));
     }
   }, [Todos]);
-
+  
   // Load todos from localStorage when the component mounts
   useEffect(() => {
-    const savedTodos = JSON.parse(localStorage.getItem("todos"));
-    if (savedTodos) {
+    if (typeof window !== "undefined") {  // ✅ Ensure localStorage runs only on client-side
+      const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
       setTodos(savedTodos);
     }
   }, []);
-
+  
   const displayedTodos = showCompleted
     ? Todos
     : Todos.filter((todo) => !todo.isCompleted);
